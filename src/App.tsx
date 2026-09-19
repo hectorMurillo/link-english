@@ -14,6 +14,7 @@ import { Courses } from './components/Courses';
 import { Convenios } from './components/Convenios';
 import { AwardsSection } from './components/AwardsSection';
 import { Teachers } from './components/Teachers';
+import { BlogSection } from './components/BlogSection';
 import { Testimonials } from './components/Testimonials';
 import { FaqSection } from './components/FaqSection';
 import { LeadForm } from './components/LeadForm';
@@ -39,6 +40,7 @@ export default function App() {
           <Convenios />
           <AwardsSection />
           <Teachers />
+          <BlogSection />
           <Testimonials />
           <FaqSection />
           <LeadForm />

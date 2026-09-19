@@ -21,6 +21,7 @@ export const Footer: React.FC = () => {
     { label: tNav.pearson, href: '#pearson' },
     { label: tNav.awards, href: '#awards' },
     { label: tNav.teachers, href: '#maestros' },
+    { label: tNav.blog, href: '#blog' },
     { label: tNav.faq, href: '#faq' },
   ];
 
