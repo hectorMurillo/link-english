@@ -1,6 +1,8 @@
 {
   "name": "Link English",
-  "description": "Cursos de inglés dinámicos para el ámbito laboral con metodología interactiva, convenios empresariales y clases individuales y grupales.",
+  "description": "Cursos de inglés para trabajadores y colaboradores Coppel con metodología dinámica y respaldo académico de Pearson (pearson.com).",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

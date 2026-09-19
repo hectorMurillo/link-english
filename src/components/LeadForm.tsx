@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, MessageSquare, Phone, Building, User, HelpCircle, Loader2 } from 'lucide-react';
 import { SITE_CONFIG } from '../data/siteData';
 import { ContactPreference, EnglishLevel, LeadFormData } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { TRANSLATIONS } from '../data/translations';
 
 export const LeadForm: React.FC = () => {
+  const { language, isEn } = useLanguage();
+  const t = TRANSLATIONS[language].leadForm;
+
   const [formData, setFormData] = useState<LeadFormData>({
     nombre: '',
     whatsapp: '',
@@ -43,12 +48,20 @@ export const LeadForm: React.FC = () => {
 
     // 1. Basic validation
     if (!trimmedNombre || !cleanPhone || !trimmedEmpresa || !selectedNivel) {
-      setErrorMessage('Por favor completa todos los campos requeridos.');
+      setErrorMessage(
+        isEn
+          ? 'Please complete all required fields.'
+          : 'Por favor completa todos los campos requeridos.'
+      );
       return;
     }
 
     if (cleanPhone.length < 10) {
-      setErrorMessage('Verifica tu número de WhatsApp (mínimo 10 dígitos).');
+      setErrorMessage(
+        isEn
+          ? 'Please verify your phone number (at least 10 digits).'
+          : 'Verifica tu número de WhatsApp (mínimo 10 dígitos).'
+      );
       return;
     }
 
@@ -63,7 +76,10 @@ export const LeadForm: React.FC = () => {
 
     // 3. Prepare pre-filled WhatsApp message
     const waPhone = cleanPhone.startsWith('52') ? cleanPhone : `52${cleanPhone}`;
-    const mensaje = `Hola, mi nombre es ${trimmedNombre}. Laboro en ${trimmedEmpresa}.\nMi nivel de inglés es: ${selectedNivel}.\nPrefiero ser contactado por: ${selectedContacto}.\nMi WhatsApp es: ${waPhone}.`;
+    const mensaje = isEn
+      ? `Hello! My name is ${trimmedNombre}. I work at ${trimmedEmpresa}.\nMy English level is: ${selectedNivel}.\nPreferred contact method: ${selectedContacto}.\nMy phone is: ${waPhone}.`
+      : `Hola, mi nombre es ${trimmedNombre}. Laboro en ${trimmedEmpresa}.\nMi nivel de inglés es: ${selectedNivel}.\nPrefiero ser contactado por: ${selectedContacto}.\nMi WhatsApp es: ${waPhone}.`;
+
     const targetWaNumber = SITE_CONFIG.phoneNumberRaw;
     const directWaUrl = `https://wa.me/${targetWaNumber}?text=${encodeURIComponent(mensaje)}`;
     setWaLinkGenerated(directWaUrl);
@@ -75,26 +91,24 @@ export const LeadForm: React.FC = () => {
       empresa: trimmedEmpresa,
       nivel: selectedNivel,
       contacto: selectedContacto,
-      linkEnglish: '', // honeypot is empty
+      linkEnglish: '',
       pageUrl: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       timestamp: new Date().toISOString(),
+      language: language,
     };
 
     try {
-      // Send to n8n webhook
       await fetch(SITE_CONFIG.webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       }).catch((err) => {
-        // Log webhook error without crashing UX
         console.warn('Webhook notification notice:', err);
       });
 
       setStatus('success');
 
-      // Attempt to open WhatsApp directly
       try {
         window.open(directWaUrl, '_blank');
       } catch (openErr) {
@@ -102,7 +116,7 @@ export const LeadForm: React.FC = () => {
       }
     } catch (err) {
       console.error('Error sending lead data:', err);
-      setStatus('success'); // Still allow user to proceed to WhatsApp
+      setStatus('success');
     }
   };
 
@@ -123,7 +137,6 @@ export const LeadForm: React.FC = () => {
       id="datos"
       className="relative py-24 lg:py-32 flex items-center justify-center overflow-hidden"
     >
-      {/* Background with Parallax effect / fixed photo */}
       <div className="absolute inset-0 z-0">
         <img
           src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/YZ9joPGJwyT20D5J/28-mnl45KNklRu3kzzW.webp"
@@ -143,17 +156,16 @@ export const LeadForm: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-white">¡Tus datos han sido recibidos!</h3>
+                <h3 className="text-2xl font-bold text-white">{t.successTitle}</h3>
                 <p className="text-slate-300 text-sm leading-relaxed max-w-md mx-auto">
-                  Gracias por tu interés en Link English. Hemos registrado tu solicitud para el
-                  diagnóstico gratuito.
+                  {t.successDesc}
                 </p>
               </div>
 
               {waLinkGenerated && (
                 <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700 text-left space-y-3">
                   <div className="text-xs text-slate-400 font-medium">
-                    ¿No se abrió WhatsApp automáticamente?
+                    {isEn ? "WhatsApp didn't open automatically?" : '¿No se abrió WhatsApp automáticamente?'}
                   </div>
                   <a
                     href={waLinkGenerated}
@@ -162,7 +174,7 @@ export const LeadForm: React.FC = () => {
                     className="inline-flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition-colors text-sm"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>Continuar a WhatsApp ahora</span>
+                    <span>{isEn ? 'Continue to WhatsApp now' : 'Continuar a WhatsApp ahora'}</span>
                   </a>
                 </div>
               )}
@@ -171,7 +183,7 @@ export const LeadForm: React.FC = () => {
                 onClick={handleReset}
                 className="text-xs text-slate-400 hover:text-white underline underline-offset-4"
               >
-                Enviar otro registro
+                {isEn ? 'Submit another request' : 'Enviar otro registro'}
               </button>
             </div>
           ) : (
@@ -179,13 +191,13 @@ export const LeadForm: React.FC = () => {
               {/* Form Header */}
               <div className="text-center mb-8">
                 <span className="inline-block px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                  Diagnóstico y Entrevista Gratuita
+                  {t.badge}
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  Déjanos tus datos
+                  {t.title}
                 </h3>
                 <p className="text-sm text-slate-400 mt-1">
-                  Y te contactamos lo más pronto posible para agendar tu sesión.
+                  {t.subtitle}
                 </p>
               </div>
 
@@ -201,7 +213,7 @@ export const LeadForm: React.FC = () => {
                 {/* Nombre */}
                 <div>
                   <label htmlFor="nombre" className="block text-xs font-medium text-slate-300 mb-1.5">
-                    Nombre completo <span className="text-red-400">*</span>
+                    {t.nameLabel} <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -213,7 +225,7 @@ export const LeadForm: React.FC = () => {
                       type="text"
                       required
                       autoComplete="name"
-                      placeholder="Ej. Juan Pérez"
+                      placeholder={t.namePlaceholder}
                       value={formData.nombre}
                       onChange={handleChange}
                       className="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -224,7 +236,7 @@ export const LeadForm: React.FC = () => {
                 {/* WhatsApp */}
                 <div>
                   <label htmlFor="whatsapp" className="block text-xs font-medium text-slate-300 mb-1.5">
-                    WhatsApp (10 dígitos) <span className="text-red-400">*</span>
+                    {t.whatsappLabel} <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -236,21 +248,23 @@ export const LeadForm: React.FC = () => {
                       type="tel"
                       required
                       autoComplete="tel"
-                      placeholder="Ej. 6671234567"
+                      placeholder={t.whatsappPlaceholder}
                       value={formData.whatsapp}
                       onChange={handleChange}
                       className="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     />
                   </div>
                   <span className="text-[11px] text-slate-400 mt-1 block">
-                    Solo números. Te enviaremos información directamente.
+                    {isEn
+                      ? 'Numbers only. We will share details directly.'
+                      : 'Solo números. Te enviaremos información directamente.'}
                   </span>
                 </div>
 
                 {/* Empresa */}
                 <div>
                   <label htmlFor="empresa" className="block text-xs font-medium text-slate-300 mb-1.5">
-                    Empresa en la que laboras <span className="text-red-400">*</span>
+                    {t.empresaLabel} <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -262,7 +276,7 @@ export const LeadForm: React.FC = () => {
                       type="text"
                       required
                       autoComplete="organization"
-                      placeholder="Ej. Coppel, SuKarne, Independiente..."
+                      placeholder={t.empresaPlaceholder}
                       value={formData.empresa}
                       onChange={handleChange}
                       className="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -273,7 +287,7 @@ export const LeadForm: React.FC = () => {
                 {/* Nivel de Inglés */}
                 <div>
                   <label htmlFor="nivel" className="block text-xs font-medium text-slate-300 mb-1.5">
-                    ¿En qué nivel te encuentras? <span className="text-red-400">*</span>
+                    {t.levelLabel} <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
@@ -287,11 +301,11 @@ export const LeadForm: React.FC = () => {
                       onChange={handleChange}
                       className="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-10 pr-8 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer"
                     >
-                      <option value="">Selecciona tu nivel aproximado</option>
-                      <option value="Básico">Básico (A1 - A2)</option>
-                      <option value="Intermedio">Intermedio (B1 - B2)</option>
-                      <option value="Avanzado">Avanzado (C1 - C2)</option>
-                      <option value="No lo sé">No lo sé (requiero evaluación)</option>
+                      <option value="">{t.levelPlaceholder}</option>
+                      <option value="Básico">{isEn ? 'Basic (A1 - A2)' : 'Básico (A1 - A2)'}</option>
+                      <option value="Intermedio">{isEn ? 'Intermediate (B1 - B2)' : 'Intermedio (B1 - B2)'}</option>
+                      <option value="Avanzado">{isEn ? 'Advanced (C1 - C2)' : 'Avanzado (C1 - C2)'}</option>
+                      <option value="No lo sé">{isEn ? 'Not sure (Need placement test)' : 'No lo sé (requiero evaluación)'}</option>
                     </select>
                   </div>
                 </div>
@@ -299,7 +313,7 @@ export const LeadForm: React.FC = () => {
                 {/* Contact Preference */}
                 <div className="pt-2">
                   <span className="block text-xs font-medium text-slate-300 mb-2">
-                    ¿Cómo deseas ser contactado?
+                    {t.contactLabel}
                   </span>
                   <div className="grid grid-cols-2 gap-3">
                     <label className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${formData.contacto === 'WhatsApp' ? 'bg-blue-600/20 border-blue-500 text-white' : 'bg-slate-950/50 border-slate-800 text-slate-400 hover:border-slate-700'}`}>
@@ -325,12 +339,12 @@ export const LeadForm: React.FC = () => {
                         className="text-blue-500 focus:ring-blue-500 h-4 w-4 bg-slate-900 border-slate-700"
                       />
                       <Phone className="w-4 h-4 text-blue-400" />
-                      <span className="text-xs font-semibold">Llamada</span>
+                      <span className="text-xs font-semibold">{isEn ? 'Phone Call' : 'Llamada'}</span>
                     </label>
                   </div>
                 </div>
 
-                {/* Honeypot field (hidden from users, traps automated bots) */}
+                {/* Honeypot */}
                 <div className="hidden" aria-hidden="true">
                   <label htmlFor="linkEnglish">linkEnglish</label>
                   <input
@@ -355,17 +369,17 @@ export const LeadForm: React.FC = () => {
                     {status === 'submitting' ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Enviando información...</span>
+                        <span>{t.sendingBtn}</span>
                       </>
                     ) : (
                       <>
                         <Send className="w-5 h-5" />
-                        <span>Enviar y Solicitar Diagnóstico</span>
+                        <span>{t.submitBtn}</span>
                       </>
                     )}
                   </button>
                   <p className="text-[11px] text-slate-400 text-center mt-2.5">
-                    Te contactaremos únicamente por el medio seleccionado. Cero spam garantizado.
+                    {t.privacyNote}
                   </p>
                 </div>
               </form>

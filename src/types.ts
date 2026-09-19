@@ -48,3 +48,22 @@ export interface CourseProgram {
   features: string[];
   idealFor: string;
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+  category?: string;
+}
+
+export type AwardCategory = 'all' | 'stationery' | 'technology' | 'boardgames' | 'discounts' | 'gift-cards';
+
+export interface AwardItem {
+  id: string;
+  name: string;
+  nameEn: string;
+  cost: number;
+  category: AwardCategory;
+  image: string;
+  badge?: string;
+  badgeEn?: string;
+}

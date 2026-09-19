@@ -1,44 +1,36 @@
 import React, { useState } from 'react';
-import { Sparkles, ArrowRight, X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { TRANSLATIONS } from '../data/translations';
 
 export const StickyBar: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const { language } = useLanguage();
+  const t = TRANSLATIONS[language].sticky;
 
   if (!isVisible) return null;
 
   return (
     <div
       id="top-promo-bar"
-      className="bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white text-xs sm:text-sm py-2 px-4 sticky top-0 z-50 shadow-md border-b border-blue-500/30"
+      className="bg-blue-900/90 border-b border-blue-700/50 text-slate-100 text-xs py-1.5 px-3 z-50 relative"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 mx-auto sm:mx-0">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300"></span>
-          </span>
-          <span className="inline-flex items-center gap-1 font-medium tracking-wide">
-            <Sparkles className="w-3.5 h-3.5 text-yellow-300 inline shrink-0" />
-            <span>
-              <strong>¡Felicidades!</strong> Ya tienes una{' '}
-              <span className="underline decoration-yellow-400 decoration-2 underline-offset-2 font-semibold">
-                entrevista GRATUITA
-              </span>{' '}
-              y diagnóstico de nivel
-            </span>
-          </span>
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 mx-auto sm:mx-0 text-center sm:text-left">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>{t.message}</span>
           <a
             href="#datos"
-            className="hidden md:inline-flex items-center gap-1 bg-white/15 hover:bg-white/25 transition-colors px-2.5 py-0.5 rounded-full font-medium text-xs ml-2 text-white border border-white/20"
+            className="hidden sm:inline-flex items-center gap-0.5 text-blue-300 hover:text-white font-medium ml-1 underline underline-offset-2"
           >
-            Aprovechar hoy <ArrowRight className="w-3 h-3" />
+            {t.cta} <ArrowRight className="w-3 h-3" />
           </a>
         </div>
 
         <button
           onClick={() => setIsVisible(false)}
           aria-label="Cerrar aviso"
-          className="text-white/70 hover:text-white p-1 rounded transition-colors shrink-0"
+          className="text-slate-400 hover:text-white p-0.5 transition-colors"
         >
           <X className="w-3.5 h-3.5" />
         </button>

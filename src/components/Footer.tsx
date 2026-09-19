@@ -1,14 +1,28 @@
 import React from 'react';
-import { Mail, Phone, MapPin, ArrowUp, GraduationCap } from 'lucide-react';
-import { NAV_ITEMS, SITE_CONFIG } from '../data/siteData';
+import { Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
+import { SITE_CONFIG } from '../data/siteData';
 import { SocialIcons } from './SocialIcons';
+import { useLanguage } from '../context/LanguageContext';
+import { TRANSLATIONS } from '../data/translations';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const { language, isEn } = useLanguage();
+  const t = TRANSLATIONS[language].footer;
+  const tNav = TRANSLATIONS[language].nav;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const navLinks = [
+    { label: tNav.courses, href: '#cursos' },
+    { label: tNav.convenios, href: '#convenios' },
+    { label: tNav.pearson, href: '#pearson' },
+    { label: tNav.awards, href: '#awards' },
+    { label: tNav.teachers, href: '#maestros' },
+    { label: tNav.faq, href: '#faq' },
+  ];
 
   return (
     <footer className="bg-gradient-to-b from-slate-900 via-blue-950 to-[#00134d] text-slate-200 border-t border-slate-800">
@@ -29,18 +43,19 @@ export const Footer: React.FC = () => {
                 <span className="text-xl font-extrabold text-white tracking-tight">
                   Link English
                 </span>
-                <p className="text-xs text-blue-300">Cursos de inglés laboral dinámicos</p>
+                <p className="text-xs text-blue-300">
+                  {isEn ? 'Dynamic Workplace English Courses' : 'Cursos de inglés laboral dinámicos'}
+                </p>
               </div>
             </div>
 
             <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
-              Capacitamos a profesionales y empresas con métodos interactivos, prácticos y
-              divertidos para que alcancen la fluidez necesaria en el mercado global.
+              {t.tagline}
             </p>
 
             <div className="pt-2">
               <span className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">
-                Conéctate en nuestras redes
+                {isEn ? 'Connect with us on social media' : 'Conéctate en nuestras redes'}
               </span>
               <SocialIcons iconClassName="w-5 h-5" />
             </div>
@@ -49,11 +64,11 @@ export const Footer: React.FC = () => {
           {/* Quick Links (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-white border-b border-slate-700/60 pb-2">
-              Navegación
+              {t.quickLinks}
             </h4>
             <ul className="space-y-2.5 text-sm">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.label}>
+              {navLinks.map((item) => (
+                <li key={item.href}>
                   <a
                     href={item.href}
                     className="text-slate-300 hover:text-white hover:translate-x-1 inline-block transition-transform duration-150"
@@ -67,7 +82,7 @@ export const Footer: React.FC = () => {
                   href="#datos"
                   className="text-blue-400 hover:text-blue-300 font-medium inline-block"
                 >
-                  Diagnóstico y entrevista gratis
+                  {isEn ? 'Free Assessment & Placement' : 'Diagnóstico y entrevista gratis'}
                 </a>
               </li>
             </ul>
@@ -76,7 +91,7 @@ export const Footer: React.FC = () => {
           {/* Contact Details (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-white border-b border-slate-700/60 pb-2">
-              Contacto Directo
+              {t.contact}
             </h4>
 
             <div className="space-y-3 text-sm">
@@ -117,7 +132,7 @@ export const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 w-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl border border-blue-400/30 transition-colors"
               >
-                <span>Chatear con un asesor educativo</span>
+                <span>{isEn ? 'Chat with an educational advisor' : 'Chatear con un asesor educativo'}</span>
               </a>
             </div>
           </div>
@@ -125,17 +140,17 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-14 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>© {currentYear} Link English. Todos los derechos reservados.</p>
+          <p>© {currentYear} Link English. {t.rights}</p>
 
           <div className="flex items-center gap-4">
-            <span>Enfoque laboral • Clases dinámicas</span>
+            <span>{isEn ? 'Workplace English • Dynamic Live Classes' : 'Enfoque laboral • Clases dinámicas'}</span>
             <button
               onClick={scrollToTop}
               className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1"
-              aria-label="Volver al inicio"
+              aria-label={isEn ? 'Scroll to top' : 'Volver al inicio'}
             >
               <ArrowUp className="w-4 h-4" />
-              <span>Arriba</span>
+              <span>{isEn ? 'Top' : 'Arriba'}</span>
             </button>
           </div>
         </div>

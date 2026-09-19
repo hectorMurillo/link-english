@@ -1,141 +1,186 @@
 import React, { useState } from 'react';
-import { Menu, X, Phone, MessageSquare } from 'lucide-react';
-import { NAV_ITEMS, SITE_CONFIG } from '../data/siteData';
-import { SocialIcons } from './SocialIcons';
+import { Menu, X, MessageSquare, Sparkles, Globe } from 'lucide-react';
+import { SITE_CONFIG } from '../data/siteData';
+import { useLanguage } from '../context/LanguageContext';
+import { TRANSLATIONS } from '../data/translations';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage, isEn } = useLanguage();
+  const tNav = TRANSLATIONS[language].nav;
 
   const closeMenu = () => setMobileMenuOpen(false);
+
+  const navLinks = [
+    { label: tNav.courses, href: '#cursos' },
+    { label: tNav.convenios, href: '#convenios' },
+    { label: tNav.pearson, href: '#pearson' },
+    { label: tNav.awards, href: '#awards' },
+    { label: tNav.teachers, href: '#maestros' },
+    { label: tNav.faq, href: '#faq' },
+  ];
 
   return (
     <nav
       id="main-navigation"
-      className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 transition-all duration-300"
+      className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/60 transition-all duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
           <a
             href="#inicio"
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1"
+            className="flex items-center gap-2.5 group focus:outline-none"
           >
             <img
               src={SITE_CONFIG.logoUrl}
-              alt="Link English Logo"
-              className="h-12 w-auto object-contain rounded-md border border-slate-700/60 shadow-sm transition-transform duration-300 group-hover:scale-105"
+              alt="Link English"
+              className="h-9 w-auto object-contain rounded-md"
               onError={(e) => {
-                // Graceful fallback to styled brand text if external host is slow
                 (e.target as HTMLElement).style.display = 'none';
               }}
             />
-            <div className="flex flex-col">
-              <span className="font-extrabold text-xl tracking-tight text-white group-hover:text-blue-400 transition-colors">
-                Link English
-              </span>
-              <span className="text-[10px] tracking-wider uppercase text-blue-400 font-semibold">
-                Inglés Laboral Dinámico
-              </span>
-            </div>
+            <span className="font-bold text-lg tracking-tight text-white group-hover:text-blue-400 transition-colors">
+              Link English
+            </span>
           </a>
 
           {/* Desktop Nav Items */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
-            {NAV_ITEMS.map((item) => (
+          <div className="hidden md:flex items-center gap-1 sm:gap-1.5">
+            {navLinks.map((item) => (
               <a
-                key={item.label}
+                key={item.href}
                 href={item.href}
-                className="text-slate-300 hover:text-white px-3 py-2 text-sm font-medium rounded-md hover:bg-slate-800/60 transition-all duration-150"
+                className="text-slate-300 hover:text-white px-3.5 py-1.5 text-sm font-medium rounded-full hover:bg-slate-800/60 transition-colors"
               >
                 {item.label}
               </a>
             ))}
           </div>
 
-          {/* Desktop Right Side: Social + CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <SocialIcons className="hidden xl:flex border-r border-slate-800 pr-4 mr-1" />
-            <a
-              href={`https://wa.me/${SITE_CONFIG.phoneNumberRaw}?text=${encodeURIComponent(
-                SITE_CONFIG.defaultWhatsAppMessage
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-medium px-2 py-1"
+          {/* Actions & Subtle Language Switcher */}
+          <div className="hidden sm:flex items-center gap-3">
+            {/* Subtle ES / EN Toggle */}
+            <div
+              className="inline-flex items-center bg-slate-900 border border-slate-800 rounded-full p-0.5 text-xs font-semibold"
+              aria-label="Seleccionar idioma / Select language"
             >
-              <Phone className="w-3.5 h-3.5" />
-              <span>{SITE_CONFIG.phoneNumberFormatted}</span>
-            </a>
+              <button
+                type="button"
+                onClick={() => setLanguage('es')}
+                className={`px-2.5 py-1 rounded-full transition-all duration-150 ${
+                  !isEn
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="Español"
+              >
+                ES
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`px-2.5 py-1 rounded-full transition-all duration-150 ${
+                  isEn
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="English"
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Assessment CTA */}
             <a
               href="#datos"
-              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm hover:shadow-blue-500/25 transition-all duration-200"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-sm hover:shadow-blue-500/25 transition-all"
             >
-              <MessageSquare className="w-4 h-4" />
-              <span>Diagnóstico Gratis</span>
+              <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+              <span>{tNav.assessmentBtn}</span>
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden gap-2">
+          {/* Mobile Right Bar */}
+          <div className="flex items-center sm:hidden gap-2">
+            {/* Mobile Subtle Language Switcher */}
+            <button
+              type="button"
+              onClick={() => setLanguage(isEn ? 'es' : 'en')}
+              className="px-2 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-bold text-slate-300 flex items-center gap-1"
+              aria-label="Cambiar idioma"
+            >
+              <Globe className="w-3 h-3 text-blue-400" />
+              <span>{isEn ? 'EN' : 'ES'}</span>
+            </button>
+
             <a
               href="#datos"
-              className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-lg"
+              className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full"
             >
-              Diagnóstico
+              {isEn ? 'Assess' : 'Diagnóstico'}
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               type="button"
-              className="text-slate-300 hover:text-white p-2 rounded-lg hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Abrir menú de navegación"
+              className="text-slate-300 hover:text-white p-2 rounded-lg hover:bg-slate-800/80 focus:outline-none"
+              aria-label="Abrir menú"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-3 pb-6 space-y-4">
-          <div className="flex flex-col space-y-2">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={closeMenu}
-                className="text-slate-200 hover:text-white hover:bg-slate-800 px-3 py-2.5 rounded-lg text-base font-medium transition-colors"
+        <div className="sm:hidden bg-slate-950/95 border-b border-slate-800 px-4 py-4 space-y-2 backdrop-blur-2xl">
+          {navLinks.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              onClick={closeMenu}
+              className="block text-slate-200 hover:text-white hover:bg-slate-800/60 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+
+          <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-3">
+            <span className="text-xs text-slate-400 flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-blue-400" />
+              <span>{isEn ? 'Language:' : 'Idioma:'}</span>
+            </span>
+            <div className="inline-flex items-center bg-slate-900 border border-slate-800 rounded-full p-0.5 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setLanguage('es')}
+                className={`px-3 py-1 rounded-full ${
+                  !isEn ? 'bg-blue-600 text-white' : 'text-slate-400'
+                }`}
               >
-                {item.label}
-              </a>
-            ))}
+                Español
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                className={`px-3 py-1 rounded-full ${
+                  isEn ? 'bg-blue-600 text-white' : 'text-slate-400'
+                }`}
+              >
+                English
+              </button>
+            </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-400">Síguenos:</span>
-              <SocialIcons />
-            </div>
-
-            <a
-              href={`https://wa.me/${SITE_CONFIG.phoneNumberRaw}?text=${encodeURIComponent(
-                SITE_CONFIG.defaultWhatsAppMessage
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-lg font-medium text-sm transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              <span>WhatsApp: {SITE_CONFIG.phoneNumberFormatted}</span>
-            </a>
-
+          <div className="pt-2">
             <a
               href="#datos"
               onClick={closeMenu}
-              className="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Solicitar Diagnóstico Gratis</span>
+              <span>{tNav.assessmentBtn}</span>
             </a>
           </div>
         </div>

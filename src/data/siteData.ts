@@ -1,16 +1,16 @@
-import { CompanyAgreement, CourseProgram, NavItem, SocialLink, TestimonialItem } from '../types';
+import { CompanyAgreement, CourseProgram, FaqItem, NavItem, SocialLink, TestimonialItem } from '../types';
 
 export const SITE_CONFIG = {
   brandName: 'Link English',
-  tagline: 'Cursos de inglés dinámicos para el ámbito laboral',
+  tagline: 'Cursos de inglés dinámicos para el ámbito laboral con respaldo Pearson',
   description:
-    'En Link English ofrecemos cursos de inglés enfocados en el ámbito laboral con una metodología dinámica, práctica y divertida para impulsar tu crecimiento profesional.',
+    'Aprende inglés mientras trabajas con Link English. Cursos dinámicos con respaldo académico de Pearson (pearson.com), horarios flexibles y beneficios especiales para colaboradores de Coppel.',
   phoneNumberRaw: '526673314414',
   phoneNumberFormatted: '667 331 4414',
   email: 'link.english.schoollanguage@gmail.com',
   city: 'Culiacán, Sinaloa, México',
   defaultWhatsAppMessage:
-    'Hola, estoy interesado en las clases de Link English, ¿me puede dar más información?',
+    'Hola, estoy interesado en las clases de Link English con respaldo Pearson, ¿me puede dar más información?',
   logoUrl:
     'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=375,fit=crop/YZ9joPGJwyT20D5J/lenglish-YD0wLE6V6NCrWxG1.jpg',
   faviconUrl:
@@ -21,15 +21,27 @@ export const SITE_CONFIG = {
     'https://images.pexels.com/videos/4629798/pexels-photo-4629798.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=630&w=1200',
   webhookUrl:
     'https://n8n.srv639121.hstgr.cloud/webhook/251cd575-33c6-41f8-bb66-9f9a65422965',
+  pearsonUrl: 'https://www.pearson.com/',
+};
+
+export const PEARSON_INFO = {
+  title: 'Respaldo Académico Internacional de Pearson',
+  badge: 'Metodología Pearson.com',
+  description:
+    'En Link English basamos nuestros programas y evaluaciones en los estándares globales de Pearson (pearson.com), líder mundial en educación y evaluación lingüística (Global Scale of English - GSE).',
+  highlights: [
+    'Materiales y progresiones pedagógicas alineadas al marco global de Pearson',
+    'Escala Global de Inglés (GSE) para medir avances reales y medibles',
+    'Preparación integral con enfoque en competencias comunicativas de negocios',
+    'Garantía de calidad académica internacional para tu currículum',
+  ],
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Nosotros', href: '#nosotros' },
   { label: 'Cursos', href: '#cursos' },
   { label: 'Convenios', href: '#convenios' },
-  { label: 'Opiniones', href: '#opiniones' },
-  { label: 'Contacto', href: '#datos' },
+  { label: 'Pearson', href: '#pearson' },
+  { label: 'Preguntas', href: '#faq' },
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
@@ -145,5 +157,38 @@ export const STATS = [
   { value: '150+', label: 'Alumnos activos', description: 'Transformando sus oportunidades laborales' },
   { value: '5+', label: 'Años de experiencia', description: 'Capacitando a profesionales y empresas' },
   { value: '100%', label: 'Enfoque práctico', description: 'Orientado a conversaciones y negocios reales' },
-  { value: '5★', label: 'Calificación promedio', description: 'Recomendado por nuestros egresados' },
+  { value: 'Pearson', label: 'Respaldo Académico', description: 'Metodología y estándares globales pearson.com' },
+];
+
+export const SEO_FAQS: FaqItem[] = [
+  {
+    question: '¿Cómo puedo aprender inglés mientras trabajo a tiempo completo?',
+    answer:
+      'En Link English diseñamos horarios flexibles matutinos, vespertinos y sabatinos creados especialmente para personas con jornadas laborales completas. Con nuestro método dinámico no pierdes tiempo en tareas repetitivas; las sesiones se centran 100% en conversación práctica, simulación de reuniones laborales y casos de negocio reales.',
+    category: 'Horarios y Modalidad',
+  },
+  {
+    question: '¿Qué beneficios ofrece el convenio para empleados y colaboradores de Coppel?',
+    answer:
+      'Los colaboradores de Grupo Coppel (tiendas, BanCoppel, centros de distribución y corporativo en Culiacán o nacional) cuentan con tarifas preferenciales con descuento exclusivo, diagnóstico de nivel sin costo, atención prioritaria por WhatsApp y horarios adaptados a sus turnos de trabajo.',
+    category: 'Convenio Coppel',
+  },
+  {
+    question: '¿En qué consiste el respaldo académico de Pearson (pearson.com)?',
+    answer:
+      'Nuestros planes de estudio y evaluaciones se apoyan en los estándares pedagógicos de Pearson (pearson.com), la empresa líder mundial en educación y certificación de idiomas. Utilizamos la Escala Global de Inglés (Global Scale of English - GSE) para que cada habilidad aprendida tenga valor y reconocimiento profesional estandarizado.',
+    category: 'Respaldo Pearson',
+  },
+  {
+    question: '¿En cuánto tiempo comenzaré a notar avances en mi inglés de trabajo?',
+    answer:
+      'Desde el primer mes notarás mayor confianza al hablar, redactar correos en inglés y comprender vocabulario técnico. Nuestro objetivo es que apliques de inmediato lo aprendido en tus juntas, correos electrónicos y entrevistas de trabajo.',
+    category: 'Resultados',
+  },
+  {
+    question: '¿El diagnóstico y la entrevista inicial son realmente gratuitos?',
+    answer:
+      'Sí, es 100% gratuito y sin compromiso. Uno de nuestros docentes evaluará tu fluidez, comprensión y metas laborales para recomendarte el plan individual o grupal óptimo.',
+    category: 'Admisiones',
+  },
 ];
