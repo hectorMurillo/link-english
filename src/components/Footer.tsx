@@ -3,11 +3,13 @@ import { Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import { SITE_CONFIG } from '../data/siteData';
 import { SocialIcons } from './SocialIcons';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigation, NavView } from '../context/NavigationContext';
 import { TRANSLATIONS } from '../data/translations';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { language, isEn } = useLanguage();
+  const { navigateTo } = useNavigation();
   const t = TRANSLATIONS[language].footer;
   const tNav = TRANSLATIONS[language].nav;
 
@@ -15,14 +17,21 @@ export const Footer: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navLinks = [
-    { label: tNav.courses, href: '#cursos' },
-    { label: tNav.convenios, href: '#convenios' },
-    { label: tNav.pearson, href: '#pearson' },
-    { label: tNav.awards, href: '#awards' },
-    { label: tNav.teachers, href: '#maestros' },
-    { label: tNav.blog, href: '#blog' },
-    { label: tNav.faq, href: '#faq' },
+  interface NavLinkItem {
+    label: string;
+    view: NavView;
+    href: string;
+  }
+
+  const navLinks: NavLinkItem[] = [
+    { label: tNav.home || (isEn ? 'Home' : 'Inicio'), view: 'inicio', href: '#inicio' },
+    { label: tNav.courses, view: 'cursos', href: '#cursos' },
+    { label: tNav.convenios, view: 'convenios', href: '#convenios' },
+    { label: tNav.pearson, view: 'pearson', href: '#pearson' },
+    { label: tNav.awards, view: 'awards', href: '#awards' },
+    { label: tNav.teachers, view: 'maestros', href: '#maestros' },
+    { label: tNav.blog, view: 'blog', href: '#blog' },
+    { label: tNav.faq, view: 'faq', href: '#faq' },
   ];
 
   return (
@@ -31,24 +40,28 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           {/* Brand Info (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigateTo('inicio')}
+              className="flex items-center gap-3 text-left cursor-pointer group"
+            >
               <img
                 src={SITE_CONFIG.logoUrl}
                 alt="Link English Logo"
-                className="h-12 w-auto object-contain rounded-md bg-white p-1 border border-blue-400/40"
+                className="h-12 w-auto object-contain rounded-md bg-white p-1 border border-blue-400/40 group-hover:scale-105 transition-transform"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
               <div>
-                <span className="text-xl font-extrabold text-white tracking-tight">
+                <span className="text-xl font-extrabold text-white tracking-tight group-hover:text-blue-400 transition-colors">
                   Link English
                 </span>
                 <p className="text-xs text-blue-300">
                   {isEn ? 'Dynamic Workplace English Courses' : 'Cursos de inglés laboral dinámicos'}
                 </p>
               </div>
-            </div>
+            </button>
 
             <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
               {t.tagline}
@@ -67,24 +80,26 @@ export const Footer: React.FC = () => {
             <h4 className="text-sm font-bold uppercase tracking-wider text-white border-b border-slate-700/60 pb-2">
               {t.quickLinks}
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-sm">
               {navLinks.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="text-slate-300 hover:text-white hover:translate-x-1 inline-block transition-transform duration-150"
+                <li key={item.view}>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo(item.view)}
+                    className="text-slate-300 hover:text-white hover:translate-x-1 inline-block transition-transform duration-150 cursor-pointer text-left"
                   >
                     {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
               <li>
-                <a
-                  href="#datos"
-                  className="text-blue-400 hover:text-blue-300 font-medium inline-block"
+                <button
+                  type="button"
+                  onClick={() => navigateTo('faq')}
+                  className="text-blue-400 hover:text-blue-300 font-medium inline-block cursor-pointer"
                 >
                   {isEn ? 'Free Assessment & Placement' : 'Diagnóstico y entrevista gratis'}
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -147,7 +162,7 @@ export const Footer: React.FC = () => {
             <span>{isEn ? 'Workplace English • Dynamic Live Classes' : 'Enfoque laboral • Clases dinámicas'}</span>
             <button
               onClick={scrollToTop}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1"
+              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors inline-flex items-center gap-1 cursor-pointer"
               aria-label={isEn ? 'Scroll to top' : 'Volver al inicio'}
             >
               <ArrowUp className="w-4 h-4" />

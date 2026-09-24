@@ -1,6 +1,7 @@
 export const TRANSLATIONS = {
   es: {
     nav: {
+      home: 'Inicio',
       courses: 'Cursos',
       convenios: 'Convenios',
       pearson: 'Pearson',
@@ -173,6 +174,7 @@ export const TRANSLATIONS = {
   },
   en: {
     nav: {
+      home: 'Home',
       courses: 'Courses',
       convenios: 'Partnerships',
       pearson: 'Pearson',

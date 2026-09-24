@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigation } from '../context/NavigationContext';
 import { TRANSLATIONS } from '../data/translations';
 
 export const StickyBar: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const { language } = useLanguage();
+  const { navigateTo } = useNavigation();
   const t = TRANSLATIONS[language].sticky;
 
   if (!isVisible) return null;
@@ -19,18 +21,19 @@ export const StickyBar: React.FC = () => {
         <div className="flex items-center gap-2 mx-auto sm:mx-0 text-center sm:text-left">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
           <span>{t.message}</span>
-          <a
-            href="#datos"
-            className="hidden sm:inline-flex items-center gap-0.5 text-blue-300 hover:text-white font-medium ml-1 underline underline-offset-2"
+          <button
+            type="button"
+            onClick={() => navigateTo('faq')}
+            className="hidden sm:inline-flex items-center gap-0.5 text-blue-300 hover:text-white font-medium ml-1 underline underline-offset-2 cursor-pointer"
           >
             {t.cta} <ArrowRight className="w-3 h-3" />
-          </a>
+          </button>
         </div>
 
         <button
           onClick={() => setIsVisible(false)}
           aria-label="Cerrar aviso"
-          className="text-slate-400 hover:text-white p-0.5 transition-colors"
+          className="text-slate-400 hover:text-white p-0.5 transition-colors cursor-pointer"
         >
           <X className="w-3.5 h-3.5" />
         </button>

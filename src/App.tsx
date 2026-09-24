@@ -5,53 +5,69 @@
 
 import React from 'react';
 import { LanguageProvider } from './context/LanguageContext';
+import { NavigationProvider, useNavigation } from './context/NavigationContext';
 import { StickyBar } from './components/StickyBar';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { PearsonBacking } from './components/PearsonBacking';
-import { Courses } from './components/Courses';
-import { Convenios } from './components/Convenios';
-import { AwardsSection } from './components/AwardsSection';
-import { Teachers } from './components/Teachers';
-import { BlogSection } from './components/BlogSection';
-import { Testimonials } from './components/Testimonials';
-import { FaqSection } from './components/FaqSection';
-import { LeadForm } from './components/LeadForm';
 import { Footer } from './components/Footer';
 import { WhatsAppBubble } from './components/WhatsAppBubble';
+
+// Dedicated Views per Menu Option
+import { HomeView } from './views/HomeView';
+import { CoursesView } from './views/CoursesView';
+import { ConveniosView } from './views/ConveniosView';
+import { PearsonView } from './views/PearsonView';
+import { AwardsView } from './views/AwardsView';
+import { TeachersView } from './views/TeachersView';
+import { BlogView } from './views/BlogView';
+import { FaqView } from './views/FaqView';
+
+const MainContent: React.FC = () => {
+  const { currentView } = useNavigation();
+
+  switch (currentView) {
+    case 'cursos':
+      return <CoursesView />;
+    case 'convenios':
+      return <ConveniosView />;
+    case 'pearson':
+      return <PearsonView />;
+    case 'awards':
+      return <AwardsView />;
+    case 'maestros':
+      return <TeachersView />;
+    case 'blog':
+      return <BlogView />;
+    case 'faq':
+      return <FaqView />;
+    case 'inicio':
+    default:
+      return <HomeView />;
+  }
+};
 
 export default function App() {
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-['Poppins',sans-serif]">
-        {/* Top Promotional Bar */}
-        <StickyBar />
+      <NavigationProvider>
+        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-['Poppins',sans-serif]">
+          {/* Top Promotional Bar */}
+          <StickyBar />
 
-        {/* Main Sticky Navbar with Awards and subtle Language Toggle */}
-        <Navbar />
+          {/* Main Sticky Navbar with Active View Indicator & Language Toggle */}
+          <Navbar />
 
-        {/* Landing Page Content Sections */}
-        <main className="flex-1">
-          <Hero />
-          <About />
-          <PearsonBacking />
-          <Courses />
-          <Convenios />
-          <AwardsSection />
-          <Teachers />
-          <BlogSection />
-          <Testimonials />
-          <FaqSection />
-          <LeadForm />
-        </main>
+          {/* Render Active View Selected in the Menu */}
+          <main className="flex-1">
+            <MainContent />
+          </main>
 
-        {/* Footer */}
-        <Footer />
+          {/* Comprehensive Footer with View Links */}
+          <Footer />
 
-        {/* Floating WhatsApp Action Bubble */}
-        <WhatsAppBubble />
-      </div>
+          {/* Floating WhatsApp Action Bubble */}
+          <WhatsAppBubble />
+        </div>
+      </NavigationProvider>
     </LanguageProvider>
   );
 }

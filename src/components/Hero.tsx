@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, ShieldCheck, CheckCircle2, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { SITE_CONFIG } from '../data/siteData';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigation } from '../context/NavigationContext';
 import { TRANSLATIONS } from '../data/translations';
 
 export const Hero: React.FC = () => {
@@ -9,7 +10,18 @@ export const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const { language, isEn } = useLanguage();
+  const { navigateTo } = useNavigation();
   const t = TRANSLATIONS[language].hero;
+
+  const handleCtaClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById('datos');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigateTo('faq');
+    }
+  };
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -95,13 +107,14 @@ export const Hero: React.FC = () => {
 
         {/* Action CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-          <a
-            href="#datos"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-sm sm:text-base px-7 py-3 rounded-full shadow-lg shadow-blue-600/25 transition-all"
+          <button
+            type="button"
+            onClick={handleCtaClick}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-sm sm:text-base px-7 py-3 rounded-full shadow-lg shadow-blue-600/25 transition-all cursor-pointer"
           >
             <span>{t.ctaPrimary}</span>
             <ArrowRight className="w-4 h-4" />
-          </a>
+          </button>
 
           <a
             href={`https://wa.me/${SITE_CONFIG.phoneNumberRaw}?text=${encodeURIComponent(
